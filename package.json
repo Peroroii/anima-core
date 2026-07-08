@@ -1,0 +1,52 @@
+{
+  "name": "anima-core",
+  "version": "0.1.0",
+  "description": "Deterministic psychodynamic engine for LLM agents — seven-dimensional state vector, seeded RNG, byte-reproducible. The engine at the heart of ANIMA, as a library.",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "src/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 90,
+        "functions": 90,
+        "lines": 90
+      }
+    }
+  },
+  "keywords": [
+    "ai-safety",
+    "psychodynamic",
+    "deterministic",
+    "llm-agents",
+    "model-organism",
+    "reproducible",
+    "simulation"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "devDependencies": {
+    "jest": "^30.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Peroroii/anima-core.git"
+  },
+  "author": "Ariel Fernández",
+  "bugs": {
+    "url": "https://github.com/Peroroii/anima-core/issues"
+  },
+  "homepage": "https://github.com/Peroroii/anima-core#readme"
+}
