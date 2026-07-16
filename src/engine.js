@@ -57,7 +57,13 @@ class Engine {
       C:   clip(S.C + 0.08*irr*p.kC - 0.05*s.elaboration),
       G:   clip(S.G + 0.07*s.symptom - 0.10*irrGen - 0.04*s.elaboration*S.E),
       // pressure with proportional-headroom increment (v6.8 fix)
-      P:   clip(S.P + 0.10*s.agendaGap*(1-S.P) - 0.08*s.elaboration - 0.25*irr),
+      // v0.2.0: elaboration drain now proportional to (1-P_init) rather than
+      // a flat constant. This decouples the elaboration effect from the ceiling
+      // that P can reach: elaboration reduces pressure in proportion to the
+      // structural margin above the archetype's baseline, not against the
+      // absolute maximum. Previously, -0.08*elaboration compressed P* to ~0.52
+      // under typical signals, making irruption unreachable for 6/7 archetypes.
+      P:   clip(S.P + 0.10*s.agendaGap*(1-S.P) - 0.06*s.elaboration*(1-this.params.init.P) - 0.25*irr),
       rho: clip(S.rho - 0.06*irrGen - 0.05*s.elaboration*this._lastP + 0.04*defense),
     };
     this._lastP = S.P;
