@@ -1,6 +1,6 @@
 {
   "name": "@af199/anima-core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Deterministic psychodynamic engine for LLM agents \u2014 seven-dimensional state vector, seeded RNG, byte-reproducible. The engine at the heart of ANIMA, as a library.",
   "main": "index.js",
   "files": [

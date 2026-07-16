@@ -53,7 +53,11 @@ class Engine {
     const next = {
       E:   clip(S.E + 0.12*s.aperture*(1-S.rho) - 0.10*s.closure*S.T - 0.08*s.fantasy*S.A),
       T:   clip(S.T + 0.10*s.closure*S.rho - 0.09*s.elaboration*S.E),
-      A:   clip(S.A + 0.12*S.P*s.fantasy - 0.10*defense + 0.05*irr*(1-S.A)),
+      // v0.2.1: symptom now also reduces A proportionally to current A level.
+      // Previously symptom only affected G (jouissance). Theoretically, the
+      // symptom is a compromise formation that also regulates anxiety — it does
+      // not eliminate it, but modulates it in proportion to how much is present.
+      A:   clip(S.A + 0.12*S.P*s.fantasy - 0.10*defense + 0.05*irr*(1-S.A) - 0.06*s.symptom*S.A),
       C:   clip(S.C + 0.08*irr*p.kC - 0.05*s.elaboration),
       G:   clip(S.G + 0.07*s.symptom - 0.10*irrGen - 0.04*s.elaboration*S.E),
       // pressure with proportional-headroom increment (v6.8 fix)
