@@ -1,7 +1,7 @@
 {
-  "name": "anima-core",
-  "version": "0.1.0",
-  "description": "Deterministic psychodynamic engine for LLM agents — seven-dimensional state vector, seeded RNG, byte-reproducible. The engine at the heart of ANIMA, as a library.",
+  "name": "@af199/anima-core",
+  "version": "0.2.0",
+  "description": "Deterministic psychodynamic engine for LLM agents \u2014 seven-dimensional state vector, seeded RNG, byte-reproducible. The engine at the heart of ANIMA, as a library.",
   "main": "index.js",
   "files": [
     "index.js",
@@ -44,7 +44,7 @@
     "type": "git",
     "url": "https://github.com/Peroroii/anima-core.git"
   },
-  "author": "Ariel Fernández",
+  "author": "Ariel Fern\u00e1ndez",
   "bugs": {
     "url": "https://github.com/Peroroii/anima-core/issues"
   },
