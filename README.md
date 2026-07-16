@@ -31,3 +31,20 @@ This is the engine as a library: `anima-eval` and other tools depend on it.
 Every Engine is seeded. Same seed + same inputs → byte-identical trajectory.
     eng.reseed('other-seed');
     eng.snapshot();   // serializable state for audit / replay
+
+**Important:** the seeded RNG is consumed *conditionally* — `_rng()` is called
+only when `S.P >= theta_irr` (the necessary condition for an irruption). This
+has two practical consequences:
+
+- **When P never reaches the threshold** (e.g. low-pressure signal sequences),
+  the seed has no effect on the trajectory. Two instances with different seeds
+  but identical signals will produce identical results. This is correct and
+  expected — the update equations are fully deterministic in that regime.
+
+- **Reproducibility is guaranteed only when input signals are identical across
+  runs.** If signal sequences differ between two runs (causing P to cross
+  `theta_irr` at different turns), the RNG is consumed at different points and
+  trajectories will diverge from there, even with the same seed.
+
+Use `anima-trace` to record and verify reproducibility: it re-runs the engine
+with the stored signal sequence and confirms byte-identical output.

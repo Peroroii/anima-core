@@ -34,7 +34,23 @@ class Engine {
 
   reseed(seed){ this._seed = seed; this._rng = mulberry32(seed); return this; }
 
-  // deterministic irruption check: necessary (P≥θ) + stochastic sufficient
+  // Deterministic irruption check: necessary condition (P≥θ) + stochastic sufficient.
+  //
+  // REPRODUCIBILITY NOTE (audit finding, v0.2.1):
+  // _rng() is consumed ONLY when S.P >= theta_irr. This has two consequences:
+  //
+  // 1. When P never reaches theta_irr (e.g. low-pressure signals), _rng() is never
+  //    called and the seed has no effect on the trajectory — two instances with
+  //    different seeds but identical signals will produce identical results.
+  //    This is correct behavior (the equations are deterministic), but may surprise
+  //    users who expect different seeds to always diverge.
+  //
+  // 2. Reproducibility is guaranteed only when input signals are identical across
+  //    runs. If signals differ (causing P to cross theta_irr at different turns),
+  //    the RNG sequence diverges from that point even with the same seed.
+  //    anima-trace verifies reproducibility by re-running with the stored signals —
+  //    do not compare snapshots from runs with different signal sequences and
+  //    expect byte-identical results.
   _checkIrruption(){
     if (this.S.P < this.params.theta_irr) return false;
     const k = 6, thetaAG = 0.9;
