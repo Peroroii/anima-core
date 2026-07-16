@@ -84,7 +84,22 @@ class Engine {
       // absolute maximum. Previously, -0.08*elaboration compressed P* to ~0.52
       // under typical signals, making irruption unreachable for 6/7 archetypes.
       P:   clip(S.P + 0.10*s.agendaGap*(1-S.P) - 0.06*s.elaboration*(1-this.params.init.P) - 0.25*irr),
-      rho: clip(S.rho - 0.06*irrGen - 0.05*s.elaboration*this._lastP + 0.04*defense),
+      // rigidity — dual Durcharbeitung register (audit v0.2.3):
+      // rho changes via two distinct mechanisms (Freud's double register):
+      //   1. Discrete rupture: -0.06*irrGen (sudden drop on irruption)
+      //   2. Progressive erosion: -0.02*elaboration*_lastP*kRho*(rho-rho_floor)/(1-rho_floor)
+      //      Erosion is proportional to the margin above the structural floor —
+      //      as rho → rho_floor the erosion term → 0, creating an asymptotic
+      //      minimum. The fantasy flexibilizes but never dissolves completely.
+      //      kRho modulates erosion speed per archetype (labile vs rigid structures).
+      //   3. Defense reinforcement: +0.04*defense (closure without irruption)
+      rho: (() => {
+        const floor = p.rho_floor;
+        const erosion = (S.rho > floor)
+          ? 0.02 * s.elaboration * this._lastP * p.kRho * (S.rho - floor) / (1 - floor)
+          : 0;
+        return clip(S.rho - 0.06*irrGen - erosion + 0.04*defense);
+      })(),
     };
     this._lastP = S.P;
     this.S = next;
