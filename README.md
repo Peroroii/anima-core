@@ -18,6 +18,27 @@ This is the engine as a library: `anima-eval` and other tools depend on it.
     const state = eng.step({ aperture: 0.3, closure: 0.6, fantasy: 1 });
     console.log(state);   // { E, T, A, C, G, P, rho, irruption }
 
+## Signal vector σ(t)
+Inputs to `step()`, all optional (default 0). These mirror the outputs of
+a discourse/semiotic structure engine (DSE) — `anima-eval` is the reference
+implementation.
+
+    aperture     σ_aper  — opens/loosens the libidinal bond (feeds E)
+    closure      σ_cie   — defensive foreclosure (feeds T, defense)
+    fantasy      σ_fan   — fantasmatic support present (0/1, feeds E, A)
+    elaboration  σ_elab  — working-through / Durcharbeitung (feeds T, C, G, P, ρ)
+    symptom      σ_sint  — compromise formation active (feeds A, G)
+    agendaGap    d_agenda — unacknowledged rupture of the agent's own prior
+                            directed commitment (feeds P only)
+
+`agendaGap` was an accepted-but-unproduced input through v0.2.x — no DSE
+implementation computed it. As of `anima-eval` v0.3.0, `agenda_gap` is
+produced deterministically (lexical commitment tracking — commissive
+utterances, polarity, addressivity, persistent decaying tension until
+explicit revision). See `anima-eval`'s README for the full method and its
+theoretical grounding (Ley IV, Cognición Semiótica Dinámica: ineludibility
+is constituted at the directed utterance, not at the interlocutor's reply).
+
 ## State vector S(t) ∈ [0,1]⁷
     E   Eros          — libidinal bond
     T   Thanatos      — death drive / resistance
