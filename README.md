@@ -18,6 +18,35 @@ This is the engine as a library: `anima-eval` and other tools depend on it.
     const state = eng.step({ aperture: 0.3, closure: 0.6, fantasy: 1 });
     console.log(state);   // { E, T, A, C, G, P, rho, irruption }
 
+## Los cuatro discursos (Lacan, Seminario XVII)
+
+    const { DISCURSOS, siguienteDiscurso, posicionesDe } = require('anima-core');
+    posicionesDe('amo');          // { agente:'S1', otro:'S2', verdad:'$', produccion:'a' }
+    siguienteDiscurso('amo');     // 'universitario'
+
+Matriz formal de cuatro posiciones estructurales fijas (agente, otro,
+verdad, producción), ocupadas rotativamente por cuatro términos (S1
+significante amo, S2 saber, $ sujeto dividido, a objeto). Codificada como
+lookup verificado (`src/discursos.js`) — la regla de rotación se comprobó
+algebraicamente contra la tabla del Seminario XVII antes de escribir la
+estructura, no se derivó de memoria.
+
+**Dato no obvio, verificado en código**: el orden real de rotación bajo
+el operador de cuartos de giro es `amo → universitario → analista →
+historica → amo` — **no** el orden en que suelen listarse (amo,
+universitario, histérica, analista), que no cierra consistentemente bajo
+ese operador.
+
+**Discurso ≠ arquetipo clínico.** Los cuatro discursos describen qué
+función ocupa qué lugar en un intercambio dado — son dinámicos, cambian
+turno a turno. Los siete arquetipos de este mismo paquete (`ARCHETYPES`)
+describen cómo se habita esa posición — son más estables, parametrizan
+`theta_irr`/`kC`/`kRho`. Son dos ejes ortogonales, pensados para cruzarse
+(un arquetipo histérico puede hablar, en un turno dado, desde el discurso
+del Amo), no dos taxonomías compitiendo por el mismo objeto — la
+integración entre ambos ejes queda como próximo paso, no resuelta en
+esta versión.
+
 ## Signal vector σ(t)
 Inputs to `step()`, all optional (default 0). These mirror the outputs of
 a discourse/semiotic structure engine (DSE) — `anima-eval` is the reference
