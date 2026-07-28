@@ -1,5 +1,27 @@
 # Changelog
 
+## core — 0.4.1 (2026-07-28)
+
+Added: `engine.stress.test.js` — a stress-test suite probing system-wide
+invariants rather than isolated functions: state bounds under maxed-out
+sustained signals (2000 turns, all 7 archetypes), determinism and real
+differentiation between archetypes, robustness against malformed input
+(NaN, strings, negatives, `undefined`), defensive copies in
+`snapshot()`/`state`/`step()`, and reachability of all 7 `theta_irr`.
+
+Fixed: a real finding, not just added coverage. The `rho_floor` comment
+in `archetypes.js` claimed "all archetypes converge to their floor
+under 500 turns of pure elaboration" — stress-tested, that's false.
+Erosion is proportional to `_lastP` (previous turn's pressure); "pure
+elaboration" with no `agendaGap` drains `P` to 0 within ~5 turns, which
+**freezes erosion** far from the floor (margin of 0.21-0.42 depending on
+archetype, confirmed at 3000 turns). Also verified what actually does
+work: with enough `agendaGap` to keep `P>0`, `rho` converges **exactly**
+to the floor (confirmed at 20,000 turns, all 7 archetypes). The comment
+now states the real condition instead of the assumed one.
+
+63/63 tests passing (19 new).
+
 ## core — 0.4.0 (2026-07-28)
 
 Added: the discourse × archetype crossing (`src/discurso_arquetipo.js`),

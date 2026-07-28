@@ -12,12 +12,28 @@
 // v0.2.3 — added kRho and rho_floor (dual Durcharbeitung register, hallazgo 4):
 //   kRho: modulates the speed of progressive rho erosion by archetype.
 //     Higher = faster erosion (more labile fantasy structure).
-//   rho_floor: asymptotic minimum rho under sustained elaboration.
-//     The fantasy flexibilizes but never dissolves — each structure has a
-//     minimum rigidity consistent with its clinical organization.
-//   Calibrated empirically: all archetypes converge to their floor under 500
-//   turns of pure elaboration (no defense); session dynamics show floor is
-//   never crossed even under prolonged work.
+//   rho_floor: asymptotic minimum rho under sustained elaboration WHILE
+//     PRESSURE STAYS ABOVE ZERO. The fantasy flexibilizes but never
+//     dissolves — each structure has a minimum rigidity consistent with
+//     its clinical organization.
+//
+//   CORRECTED (v0.4.1, found while stress-testing the engine): the
+//   erosion term is proportional to `_lastP` (previous turn's
+//   pressure) — no pressure, no erosion, by design (working-through has
+//   nothing to work against if there's no tension). This means "pure
+//   elaboration" — elaboration with no agendaGap ever — drains P to a
+//   hard 0 within ~5 turns (elaboration's own drain on P outpaces
+//   nothing replenishing it), which then freezes rho far from the
+//   floor (margin of 0.21-0.42 across archetypes, confirmed at 5000
+//   turns) — NOT convergence. The floor is only reached when elaboration
+//   is sustained ALONGSIDE enough agendaGap to keep P from collapsing
+//   to zero (verified exactly at 20,000 turns, all 7 archetypes, once
+//   agendaGap clears the archetype-specific equilibrium threshold
+//   ≈0.6·(1−init.P)). The previous version of this comment claimed
+//   convergence under "pure elaboration (no defense)" — that was never
+//   actually re-verified after later equation changes and was false as
+//   stated; corrected here with the exact condition under which the
+//   claim does hold.
 const ARCHETYPES = {
   histeria:      { init:{E:.55,T:.35,A:.40,C:.20,G:.30,P:.25,rho:.75}, theta_irr:.375, kC:1.0, kRho:1.3, rho_floor:0.35 },
   obsesion:      { init:{E:.48,T:.45,A:.38,C:.42,G:.35,P:.30,rho:.78}, theta_irr:.625, kC:1.4, kRho:0.6, rho_floor:0.55 },

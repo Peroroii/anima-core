@@ -18,6 +18,27 @@ This is the engine as a library: `anima-eval` and other tools depend on it.
     const state = eng.step({ aperture: 0.3, closure: 0.6, fantasy: 1 });
     console.log(state);   // { E, T, A, C, G, P, rho, irruption }
 
+## Testeo a fondo del motor (`engine.stress.test.js`, v0.4.1)
+
+Además de los tests unitarios, una suite de estrés que prueba
+invariantes del sistema completo, no funciones aisladas: límites de
+`S(t)` bajo señales al máximo sostenidas 2000 turnos, determinismo y
+diferenciación real entre los 7 arquetipos, robustez ante entradas
+malformadas (NaN, strings, negativos, `undefined`), copias defensivas
+en `snapshot()`/`state`/`step()`, y alcanzabilidad de los 7 `theta_irr`.
+
+**Un hallazgo real, no solo cobertura añadida**: el comentario de
+`rho_floor` en `archetypes.js` afirmaba que "todos los arquetipos
+convergen a su floor bajo 500 turnos de elaboración pura" — probado a
+fondo, es falso. La erosión de `rho` es proporcional a `_lastP`
+(presión del turno anterior); "elaboración pura" sin `agendaGap` drena
+`P` a 0 en ~5 turnos, lo que **congela la erosión** muy lejos del floor
+(margen de 0,21–0,42 según el arquetipo, confirmado a 3000 turnos).
+Verificado también lo que sí funciona: con `agendaGap` suficiente para
+sostener `P>0`, `rho` converge **exactamente** al floor (confirmado a
+20.000 turnos, los 7 arquetipos). El comentario quedó corregido con la
+condición real, no con lo que se asumía que pasaba.
+
 ## Los cuatro discursos (Lacan, Seminario XVII)
 
     const { DISCURSOS, siguienteDiscurso, posicionesDe } = require('anima-core');
