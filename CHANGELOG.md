@@ -1,5 +1,33 @@
 # Changelog
 
+## core — 0.5.0 (2026-07-28)
+
+Added: the discourse × archetype crossing is now wired into
+`engine.js`'s update equations — the explicit next step flagged in
+v0.4.0/v0.4.1. `signals.discurso` is an optional field (one of the 4
+discourse names, or absent/`null`). When present,
+`(1-congruencia(archetype, discurso))` — how foreign the occupied
+discourse is to the archetype's resting bias — adds structural tension
+to `P`, using the same proportional-headroom pattern already used for
+`agendaGap` (`kDiscurso·discordancia·(1-P)`, `kDiscurso=0.03`) rather
+than inventing a new mechanism.
+
+Backward compatible by construction: omitting `discurso` (every caller
+before this release) makes `discordanciaDiscursiva` exactly 0 — zero
+behavior change for existing code, verified by the full 63-test suite
+passing unchanged before any new tests were added. An invalid discourse
+name doesn't throw either — contributes 0, same robustness standard as
+the rest of the engine.
+
+Verified directionally and under stress before trusting it: incongruent
+discourse produces measurably more pressure than congruent discourse,
+holding everything else equal; determinism holds with `discurso`
+varying turn to turn; the worst case (each archetype's LEAST congruent
+discourse, combined with maxed-out signals, 2000 turns) stays within
+`[0,1]` for all 7 archetypes.
+
+68/68 tests passing (5 new).
+
 ## core — 0.4.1 (2026-07-28)
 
 Added: `engine.stress.test.js` — a stress-test suite probing system-wide

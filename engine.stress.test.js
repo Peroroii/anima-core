@@ -7,6 +7,7 @@
 // rho_floor es cierta?" — no lo era, ver más abajo).
 const { Engine } = require('./src/engine');
 const { ARCHETYPES } = require('./src/archetypes');
+const { DISCOURSE_BIAS } = require('./src/discurso_arquetipo');
 
 const TODOS_LOS_ARQUETIPOS = Object.keys(ARCHETYPES);
 
@@ -169,6 +170,67 @@ describe('copias defensivas — mutar un resultado no debe corromper el estado i
     r.P = 12345;
     const r2 = e.step({});
     expect(r2.P).not.toBe(12345);
+  });
+});
+
+describe('discurso × arquetipo, cableado al motor (v0.5.0)', () => {
+  test('sin discurso (o con discurso omitido) el comportamiento es idéntico al de antes del ' +
+       'cableado -- discordanciaDiscursiva es 0 y no contribuye nada a P, preservando cada ' +
+       'llamador existente exactamente', () => {
+    const e = new Engine({ archetype: 'histeria', seed: 'sin-discurso' });
+    const r = e.step({ agendaGap: 0.2 });
+    expect(r.discordanciaDiscursiva).toBe(0);
+  });
+
+  test('un discurso incongruente con el arquetipo genera más presión que uno congruente, ' +
+       'manteniendo todo lo demás igual -- histeria (sesgo fuerte hacia historica) bajo ' +
+       'universitario (su discurso menos congruente) acumula más P', () => {
+    function correr(discurso){
+      const e = new Engine({ archetype: 'histeria', seed: 'wiring-test' });
+      let r;
+      for (let t = 0; t < 10; t++) r = e.step({ agendaGap: 0.2, discurso });
+      return r.P;
+    }
+    const sinDiscurso = correr(undefined);
+    const congruente = correr('historica');
+    const incongruente = correr('universitario');
+    expect(congruente).toBeGreaterThan(sinDiscurso); // hasta el mejor ajuste (0.55) deja tensión residual
+    expect(incongruente).toBeGreaterThan(congruente);
+  });
+
+  test('un nombre de discurso inválido no crashea -- contribuye discordancia 0, mismo criterio ' +
+       'de robustez que el resto del motor ante entradas malformadas', () => {
+    const e = new Engine({ archetype: 'histeria', seed: 'discurso-invalido' });
+    const r = e.step({ agendaGap: 0.2, discurso: 'no_existe' });
+    expect(r.discordanciaDiscursiva).toBe(0);
+    expect(Number.isNaN(r.P)).toBe(false);
+  });
+
+  test('determinismo se preserva con discurso variable turno a turno', () => {
+    const signals = ['amo', 'universitario', 'analista', 'historica', null, 'amo'];
+    const e1 = new Engine({ archetype: 'paranoia', seed: 'det-disc' });
+    const e2 = new Engine({ archetype: 'paranoia', seed: 'det-disc' });
+    const t1 = signals.map(d => e1.step({ agendaGap: 0.3, discurso: d }));
+    const t2 = signals.map(d => e2.step({ agendaGap: 0.3, discurso: d }));
+    expect(t1).toEqual(t2);
+  });
+
+  test('peor caso: discurso más incongruente de cada arquetipo + señales al máximo sostenidas ' +
+       '2000 turnos, S(t) se mantiene en [0,1] sin excepción, los 7 arquetipos', () => {
+    for (const arch of TODOS_LOS_ARQUETIPOS){
+      const pesos = DISCOURSE_BIAS[arch].pesos;
+      const masIncongruente = Object.entries(pesos).sort((a, b) => a[1] - b[1])[0][0];
+      const e = new Engine({ archetype: arch, seed: 'peor-' + arch });
+      for (let t = 0; t < 2000; t++){
+        const r = e.step({ aperture: 1, closure: 1, fantasy: 1, elaboration: 1, symptom: 1,
+                            agendaGap: 1, discurso: masIncongruente });
+        for (const k of ['E', 'T', 'A', 'C', 'G', 'P', 'rho']){
+          expect(Number.isNaN(r[k])).toBe(false);
+          expect(r[k]).toBeGreaterThanOrEqual(0);
+          expect(r[k]).toBeLessThanOrEqual(1);
+        }
+      }
+    }
   });
 });
 

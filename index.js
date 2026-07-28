@@ -10,5 +10,5 @@ module.exports = {
   DISCURSOS, ROTACION, TERM_CYCLE, rotarTermino, siguienteDiscurso,
   anteriorDiscurso, posicionesDe, verificarConsistencia,
   DISCOURSE_BIAS, discursoDominante, congruencia,
-  VERSION:'0.4.1',
+  VERSION:'0.5.0',
 };

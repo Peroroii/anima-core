@@ -106,6 +106,28 @@ baja congruencia module la presión `P` como tensión estructural de
 ocupar una posición discursiva ajena al arquetipo — es el próximo paso
 natural, no resuelto en esta versión.
 
+## Cruce cableado al motor (v0.5.0)
+
+    const e = new Engine({ archetype: 'histeria', seed: 's1' });
+    e.step({ agendaGap: 0.2, discurso: 'universitario' }); // discurso ajeno a histeria -> más tensión
+    e.step({ agendaGap: 0.2, discurso: 'historica' });     // discurso propio -> menos tensión
+
+`signals.discurso` es un campo **opcional** del vector de señal (uno de
+los 4 discursos, o ausente/`null`). Cuando está presente,
+`(1 - congruencia(arquetipo, discurso))` — la discordancia entre el
+arquetipo y el discurso efectivamente ocupado ese turno — suma tensión
+a `P`, con el mismo patrón de headroom proporcional que ya usa
+`agendaGap` (`kDiscurso·discordancia·(1-P)`, `kDiscurso=0.03`) — no se
+inventó un mecanismo nuevo, se reutilizó el que ya existía. Sin
+`discurso`, el comportamiento es idéntico al de antes de esta versión:
+`discordanciaDiscursiva` es 0 y no aporta nada — cada llamador anterior
+sigue funcionando exactamente igual. Un nombre de discurso inválido
+tampoco rompe nada: contribuye discordancia 0, mismo criterio de
+robustez que el resto del motor ante entradas malformadas (verificado
+en `engine.stress.test.js`, incluido el peor caso: discurso más
+incongruente + señales al máximo sostenidas 2000 turnos, los 7
+arquetipos, sin salirse de `[0,1]`).
+
 ## Signal vector σ(t)
 Inputs to `step()`, all optional (default 0). These mirror the outputs of
 a discourse/semiotic structure engine (DSE) — `anima-eval` is the reference
