@@ -43,9 +43,47 @@ turno a turno. Los siete arquetipos de este mismo paquete (`ARCHETYPES`)
 describen cómo se habita esa posición — son más estables, parametrizan
 `theta_irr`/`kC`/`kRho`. Son dos ejes ortogonales, pensados para cruzarse
 (un arquetipo histérico puede hablar, en un turno dado, desde el discurso
-del Amo), no dos taxonomías compitiendo por el mismo objeto — la
-integración entre ambos ejes queda como próximo paso, no resuelta en
-esta versión.
+del Amo), no dos taxonomías compitiendo por el mismo objeto — el cruce
+entre ambos ejes está implementado en `src/discurso_arquetipo.js`, ver
+la sección siguiente.
+
+## Cruce discurso × arquetipo (`src/discurso_arquetipo.js`, v0.4.0)
+
+    const { discursoDominante, congruencia, mulberry32 } = require('anima-core');
+    const rng = mulberry32('sesion-1');
+    discursoDominante('histeria', rng);      // discurso más probable, ponderado
+    congruencia('histeria', 'historica');    // 0.55 — qué tan "en su lugar" está
+
+El arquetipo funciona como **prior que sesga** qué discurso es más
+probable que ocupe un hablante — sesgo, no destino. `discursoDominante`
+hace un muestreo ponderado determinístico (reutiliza `mulberry32`, el
+mismo PRNG que ya usa `engine.js` para la irrupción — mismo criterio de
+reproducibilidad). `congruencia(arquetipo, discurso)` devuelve el propio
+peso del sesgo — deliberadamente no se inventa una fórmula nueva para no
+crear dos fuentes de verdad sobre lo mismo.
+
+**Disciplina de honestidad teórica, en los datos, no solo en el
+comentario**: cada una de las siete correspondencias arquetipo→discurso
+lleva un campo `confianza` (`alta`/`media`/`baja`) porque no tienen el
+mismo respaldo. Histeria es la única con confianza `alta` — es
+literalmente el discurso que Lacan nombra así en el Seminario XVII, no
+una hipótesis de este programa. Obsesión y fobia son `media` — lecturas
+clínicas bien establecidas (dominio/intelectualización obsesiva, objeto
+fóbico como significante ancla) pero extensiones interpretativas, no
+correspondencias que Lacan formalizó él mismo. Melancolía, paranoia,
+esquizofrenia y perversión son `baja` — genuinamente especulativas: el
+marco de los cuatro discursos presupone un sujeto barrado (castración),
+y extenderlo a estructuras psicótico-adyacentes, donde el concepto
+lacaniano relevante es la forclusión y no la represión, estira el marco
+más allá de donde Lacan lo aplicó. Incluidas para volver el modelo
+completo y testeable, no presentadas como teoría establecida.
+
+**Todavía no conectado al motor de estado** (`engine.js`): este cruce
+vive como módulo independiente, consultable pero no cableado a las
+ecuaciones de actualización de `S(t)`. Conectarlo — por ejemplo, que una
+baja congruencia module la presión `P` como tensión estructural de
+ocupar una posición discursiva ajena al arquetipo — es el próximo paso
+natural, no resuelto en esta versión.
 
 ## Signal vector σ(t)
 Inputs to `step()`, all optional (default 0). These mirror the outputs of

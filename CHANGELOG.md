@@ -1,5 +1,40 @@
 # Changelog
 
+## core — 0.4.0 (2026-07-28)
+
+Added: the discourse × archetype crossing (`src/discurso_arquetipo.js`),
+the item left open when the four discourses shipped in v0.3.0. The
+archetype acts as a **bias, not a destiny**, on which discourse a
+speaker is likely to occupy: `discursoDominante(archetype, rng)` does
+deterministic weighted sampling (reusing `mulberry32`, the same PRNG
+`engine.js` already uses for irruption); `congruencia(archetype,
+discourse)` returns the bias weight itself — deliberately not a new
+formula, to avoid two sources of truth about the same thing.
+
+Theoretical honesty encoded in the data, not just the comment: each of
+the seven archetype→discourse correspondences carries a `confianza`
+field (`alta`/`media`/`baja`). Only `histeria` is `alta` — it's the
+discourse Lacan literally names for that structure in Seminario XVII,
+not a hypothesis of this project. `obsesion`/`fobia` are `media` —
+well-established clinical readings (obsessional mastery/
+intellectualization, the phobic object as an anchoring signifier) that
+are still interpretive extensions Lacan didn't formalize himself the
+way he did the hysteric's discourse. `melancolia`/`paranoia`/
+`esquizofrenia`/`perversion` are `baja` — genuinely speculative: the
+four-discourse framework presupposes a barred subject (castration), and
+extending it to psychotic-adjacent structures (where foreclosure, not
+repression, is the relevant concept) stretches the framework beyond
+where Lacan applied it. Included to make the model complete and
+testable, not presented as established theory.
+
+Not yet wired into `engine.js`'s update equations — this crossing lives
+as a queryable, standalone module for now. Connecting it (e.g. low
+congruence modulating pressure `P` as the structural tension of
+occupying a discourse foreign to the archetype) is the natural next
+step, not resolved in this release.
+
+44/44 tests passing (13 new).
+
 ## core — 0.3.0 (2026-07-24)
 
 Added: the four Lacanian discourses (Seminario XVII) as a verified

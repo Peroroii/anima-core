@@ -98,3 +98,16 @@ describe('irruption mechanism', () => {
     expect(fired).toBe(true);
   });
 });
+
+describe('discurso × arquetipo — wired at the top-level package export (v0.4.0)', () => {
+  const anima = require('./index');
+  test('discursoDominante and congruencia are exposed and usable for every archetype the ' +
+       'package actually defines, not just a subset', () => {
+    const rng = anima.mulberry32('integracion');
+    for (const arquetipo of Object.keys(anima.ARCHETYPES)){
+      const d = anima.discursoDominante(arquetipo, rng);
+      expect(anima.ROTACION).toContain(d);
+      expect(typeof anima.congruencia(arquetipo, d)).toBe('number');
+    }
+  });
+});
