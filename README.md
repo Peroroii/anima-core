@@ -18,6 +18,42 @@ This is the engine as a library: `anima-eval` and other tools depend on it.
     const state = eng.step({ aperture: 0.3, closure: 0.6, fantasy: 1 });
     console.log(state);   // { E, T, A, C, G, P, rho, irruption }
 
+## Barrido sistemático del espacio de señales (`src/phase_sweep.js`, v0.6.0)
+
+    const { barrerArquetipo, barrerTodosLosArquetipos } = require('anima-core');
+    const r = barrerArquetipo('histeria', { maxTurns: 300 });
+    r.limites;       // violaciones de [0,1] -- debería ser siempre []
+    r.noEstabiliza;  // combos que nunca se asientan dentro del horizonte
+    r.cruceDeFloor;  // combos donde rho cruzó por debajo del floor declarado
+
+Reemplaza los scripts sueltos que se usaron para encontrar el bug de
+`rho_floor` y verificar la dirección del término de discordancia
+discursiva, por una herramienta permanente: recorre una grilla de 729
+combinaciones de señales (3 niveles × 6 señales numéricas) por
+arquetipo, deja correr cada una a régimen, y chequea tres invariantes
+concretos — no "cualquier cosa que se vea rara" en abstracto, sino las
+tres preguntas que ya demostraron dar sorpresas reales.
+
+**Encontró algo real en su primera corrida**: el *floor* de `rho`
+**no es un piso absoluto** — solo protege contra la erosión que
+depende de `elaboration`. La irrupción tiene su propio término de
+reducción de `rho` (`-0.06*irrGen`), completamente independiente, sin
+ninguna protección del floor. Un combo con `elaboration=0` sostenido
+igual cruza el floor de histeria (0.35) por irrupciones repetidas —
+confirmado turno a turno, cada caída de `rho` coincide exactamente con
+`irruption: true`.
+
+**No se resolvió unilateralmente.** Es una pregunta teórica genuina,
+no un bug con respuesta obvia: ¿debería la irrupción también respetar
+el floor (haciéndolo un piso real de `rho`), o es correcto que no lo
+haga — la irrupción representando un retorno de lo reprimido que puede
+quebrar incluso la rigidez mínima de la estructura, un tipo de evento
+cualitativamente distinto de la erosión gradual por elaboración? La
+ecuación queda sin cambios hasta esa decisión; el hallazgo está
+documentado en el comentario de `rho_floor` en `archetypes.js` y
+fijado como test de regresión (`phase_sweep.test.js`) para que se seguirá
+detectando hasta que se decida a propósito.
+
 ## Testeo a fondo del motor (`engine.stress.test.js`, v0.4.1)
 
 Además de los tests unitarios, una suite de estrés que prueba

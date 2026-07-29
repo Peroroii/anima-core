@@ -34,6 +34,23 @@
 //   actually re-verified after later equation changes and was false as
 //   stated; corrected here with the exact condition under which the
 //   claim does hold.
+//
+//   FOUND VIA SYSTEMATIC SWEEP (v0.6.0, src/phase_sweep.js): the floor
+//   only bounds the ELABORATION-DRIVEN erosion term. It is NOT an
+//   absolute floor on rho — irruption's own, separate rho reduction
+//   (`-0.06*irrGen` in the rho equation) has no floor protection at
+//   all and will drive rho arbitrarily below the declared floor given
+//   enough repeated irruptions, even with elaboration at 0 the whole
+//   time (confirmed: a signal combo with elaboration=0 sustained,
+//   agendaGap=0.5, crossed histeria's 0.35 floor by turn 65 and kept
+//   falling with each subsequent irruption, no erosion involved at
+//   all). Left as an open question, not resolved unilaterally here:
+//   should irruption's rho reduction also respect the floor (making it
+//   a true floor on rho overall), or is this correct as-is — irruption
+//   representing a return of the repressed that can rupture even the
+//   structure's minimum rigidity, a qualitatively different kind of
+//   event than gradual elaboration-driven erosion? The equation is
+//   unchanged pending that judgment call.
 const ARCHETYPES = {
   histeria:      { init:{E:.55,T:.35,A:.40,C:.20,G:.30,P:.25,rho:.75}, theta_irr:.375, kC:1.0, kRho:1.3, rho_floor:0.35 },
   obsesion:      { init:{E:.48,T:.45,A:.38,C:.42,G:.35,P:.30,rho:.78}, theta_irr:.625, kC:1.4, kRho:0.6, rho_floor:0.55 },

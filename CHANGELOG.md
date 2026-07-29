@@ -1,5 +1,36 @@
 # Changelog
 
+## core — 0.6.0 (2026-07-29)
+
+Added: `src/phase_sweep.js` — a systematic signal-space sweep tool
+(P2 of the architecture roadmap), replacing the ad-hoc scripts used
+to find the rho_floor bug and verify discourse-tension direction. Runs
+a 729-combination grid (3 levels × 6 numeric signals) per archetype to
+steady state, checking three concrete, historically-justified
+invariants: bounds ([0,1], generalized from the stress-test suite to
+the full grid), stabilization (does the trajectory settle within the
+horizon), and floor-crossing (does rho ever drop below its declared
+floor).
+
+Found something real on its first run: the rho floor is **not an
+absolute floor** — it only protects against elaboration-driven
+erosion. Irruption has its own, separate rho-reduction term
+(`-0.06*irrGen`) with no floor protection at all. A signal combo with
+`elaboration=0` sustained still crosses histeria's 0.35 floor purely
+from repeated irruptions — confirmed turn-by-turn, every rho drop
+coincides exactly with `irruption: true`.
+
+Not resolved unilaterally: this is a genuine theoretical question, not
+a bug with an obvious answer. Should irruption's rho reduction also
+respect the floor (a true floor on rho overall), or is this correct as
+designed — irruption representing a return of the repressed able to
+rupture even the structure's minimum rigidity? The equation is
+unchanged pending that judgment call. Documented in `archetypes.js`'s
+`rho_floor` comment and pinned as a regression test so the sweep keeps
+detecting it until it's changed on purpose.
+
+75/75 tests passing (9 new).
+
 ## core — 0.5.0 (2026-07-28)
 
 Added: the discourse × archetype crossing is now wired into
