@@ -20,14 +20,17 @@ erosion. Irruption has its own, separate rho-reduction term
 from repeated irruptions — confirmed turn-by-turn, every rho drop
 coincides exactly with `irruption: true`.
 
-Not resolved unilaterally: this is a genuine theoretical question, not
-a bug with an obvious answer. Should irruption's rho reduction also
-respect the floor (a true floor on rho overall), or is this correct as
-designed — irruption representing a return of the repressed able to
-rupture even the structure's minimum rigidity? The equation is
-unchanged pending that judgment call. Documented in `archetypes.js`'s
-`rho_floor` comment and pinned as a regression test so the sweep keeps
-detecting it until it's changed on purpose.
+Not resolved unilaterally — asked, and resolved with the project's own
+judgment: this is correct as designed, not a bug. The floor describes
+a minimum reachable through gradual working-through, not a hard
+ceiling on how far a genuinely disruptive event can go. Irruption is a
+return of the repressed; letting it rupture even the structure's
+nominal minimum rigidity is theoretically consistent. The equation
+stays unchanged — `rho_floor` should be read as "the floor under
+gradual erosion", not "the floor, full stop". Documented in
+`archetypes.js`'s `rho_floor` comment and pinned as a regression test
+asserting the confirmed-intentional behavior, not describing an open
+question.
 
 75/75 tests passing (9 new).
 

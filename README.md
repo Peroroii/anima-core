@@ -43,16 +43,18 @@ igual cruza el floor de histeria (0.35) por irrupciones repetidas —
 confirmado turno a turno, cada caída de `rho` coincide exactamente con
 `irruption: true`.
 
-**No se resolvió unilateralmente.** Es una pregunta teórica genuina,
-no un bug con respuesta obvia: ¿debería la irrupción también respetar
-el floor (haciéndolo un piso real de `rho`), o es correcto que no lo
-haga — la irrupción representando un retorno de lo reprimido que puede
-quebrar incluso la rigidez mínima de la estructura, un tipo de evento
-cualitativamente distinto de la erosión gradual por elaboración? La
-ecuación queda sin cambios hasta esa decisión; el hallazgo está
-documentado en el comentario de `rho_floor` en `archetypes.js` y
-fijado como test de regresión (`phase_sweep.test.js`) para que se seguirá
-detectando hasta que se decida a propósito.
+**No se resolvió unilateralmente — se preguntó, y se resolvió con el
+criterio del proyecto.** Es correcto por diseño, no un bug: el floor
+describe un mínimo alcanzable por trabajo gradual (elaboración
+erosionando una estructura rígida con el tiempo) — nunca estuvo
+pensado como un techo absoluto sobre cuánto puede perforar un evento
+genuinamente disruptivo. La irrupción es un retorno de lo reprimido;
+que pueda quebrar incluso la rigidez mínima nominal de la estructura
+es coherente con la propia teoría, no una falla de la ecuación. La
+ecuación queda sin cambios — `rho_floor` debe leerse como "el piso
+bajo erosión gradual", no "el piso, punto"; el hallazgo y la decisión
+quedan documentados en el comentario de `rho_floor` en
+`archetypes.js` y fijados como test de regresión (`phase_sweep.test.js`).
 
 ## Testeo a fondo del motor (`engine.stress.test.js`, v0.4.1)
 

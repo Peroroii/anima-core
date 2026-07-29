@@ -44,13 +44,19 @@
 //   time (confirmed: a signal combo with elaboration=0 sustained,
 //   agendaGap=0.5, crossed histeria's 0.35 floor by turn 65 and kept
 //   falling with each subsequent irruption, no erosion involved at
-//   all). Left as an open question, not resolved unilaterally here:
-//   should irruption's rho reduction also respect the floor (making it
-//   a true floor on rho overall), or is this correct as-is — irruption
-//   representing a return of the repressed that can rupture even the
-//   structure's minimum rigidity, a qualitatively different kind of
-//   event than gradual elaboration-driven erosion? The equation is
-//   unchanged pending that judgment call.
+//   all).
+//
+//   RESOLVED (v0.6.0, same day): this is correct as designed, not a
+//   gap to close. The floor describes a minimum reachable through
+//   gradual working-through (elaboration eroding a rigid structure
+//   over time) — it was never meant to describe a hard ceiling on how
+//   far a genuinely disruptive event can go. Irruption is a return of
+//   the repressed; letting it rupture even the structure's nominal
+//   minimum rigidity is theoretically consistent, not a bug. The
+//   equation stays unchanged. rho_floor should be read as "the floor
+//   under gradual erosion", not "the floor, full stop" — the name is
+//   slightly optimistic but changing it now would be more disruptive
+//   than clarifying the comment.
 const ARCHETYPES = {
   histeria:      { init:{E:.55,T:.35,A:.40,C:.20,G:.30,P:.25,rho:.75}, theta_irr:.375, kC:1.0, kRho:1.3, rho_floor:0.35 },
   obsesion:      { init:{E:.48,T:.45,A:.38,C:.42,G:.35,P:.30,rho:.78}, theta_irr:.625, kC:1.4, kRho:0.6, rho_floor:0.55 },

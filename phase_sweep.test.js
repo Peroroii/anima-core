@@ -31,7 +31,7 @@ describe('barrerArquetipo — invariante de límites, generalizado a toda la gri
   }, 30000);
 });
 
-describe('hallazgo real (v0.6.0): el floor NO protege contra la erosión por irrupción', () => {
+describe('hallazgo real (v0.6.0): la irrupción perfora el floor a propósito, no por bug', () => {
   test('un combo con elaboration=0 sostenido igual cruza el floor de histeria, por irrupciones ' +
        'repetidas -- confirma que rho_floor solo protege la erosión vía elaboración, no rho en ' +
        'general', () => {
@@ -50,13 +50,12 @@ describe('hallazgo real (v0.6.0): el floor NO protege contra la erosión por irr
     expect(huboCaidaSinIrrupcion).toBe(false);
   });
 
-  test('la pregunta teórica queda documentada como abierta, no resuelta unilateralmente -- este ' +
-       'test existe para que el barrido siga encontrando el mismo comportamiento hasta que se ' +
-       'decida y se actualice la ecuación (o el test) a propósito', () => {
+  test('RESUELTO (v0.6.0, mismo día): esto es correcto por diseño, no un gap a cerrar -- la ' +
+       'irrupción como retorno de lo reprimido puede quebrar incluso la rigidez mínima nominal ' +
+       'de la estructura, coherente con la propia teoría. Este test fija que el barrido debe ' +
+       'SEGUIR encontrando cruces de floor -- si algún día da 0, revisar si fue un cambio de ' +
+       'ecuación deliberado (documentado) o una regresión accidental', () => {
     const r = barrerArquetipo('esquizofrenia', { maxTurns: 150 });
-    // hoy ESPERAMOS cruces de floor vía irrupción -- si algún día esto
-    // da 0, es porque la ecuación cambió (o el barrido), y hay que
-    // revisar por qué antes de asumir que es una mejora
     expect(r.cruceDeFloor.length).toBeGreaterThan(0);
   });
 });

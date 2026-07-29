@@ -18,9 +18,12 @@
 //      horizonte dado, o sigue cambiando sin converger? (pregunta
 //      nueva, nunca antes chequeada sistemáticamente)
 //   3. rho_floor — ¿rho cruza alguna vez por DEBAJO del floor
-//      declarado del arquetipo? (el invariante que el comentario
-//      original afirmaba mal — ahora es un chequeo automático, no una
-//      lectura manual de 7 números)
+//      declarado del arquetipo? (RESUELTO v0.6.0, mismo día: sí, a
+//      propósito, vía irrupción — el floor solo protege la erosión por
+//      elaboración, no rho en general. cruceDeFloor sigue reportado
+//      como observabilidad de ese comportamiento esperado, no como
+//      sospecha de bug — ver el comentario de rho_floor en
+//      archetypes.js para el razonamiento completo)
 //
 // Deliberadamente NO intenta detectar "comportamiento inesperado" en
 // abstracto — cada chequeo tiene una razón concreta de por qué importa,
