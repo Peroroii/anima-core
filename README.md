@@ -18,6 +18,17 @@ This is the engine as a library: `anima-eval` and other tools depend on it.
     const state = eng.step({ aperture: 0.3, closure: 0.6, fantasy: 1 });
     console.log(state);   // { E, T, A, C, G, P, rho, irruption }
 
+## Consistencia de versión (v0.6.1)
+
+`VERSION` se lee de `package.json` en tiempo de import, no de un literal
+fijo — el mismo patrón ya probado en `anima-eval` (v0.17.0) y
+`anima-trace` (v1.0.1). Antes de este fix, cada release de esta sesión
+mantuvo `VERSION` sincronizado a mano con un `sed` — frágil, y la
+tercera instancia del mismo error raíz en los tres paquetes de ANIMA.
+Test de guarda verificado a propósito: desincronizar `package.json` y
+confirmar que el chequeo del `CHANGELOG.md` (que sí puede seguir
+mintiendo aunque `VERSION` ya no) lo atrapa.
+
 ## Barrido sistemático del espacio de señales (`src/phase_sweep.js`, v0.6.0)
 
     const { barrerArquetipo, barrerTodosLosArquetipos } = require('anima-core');

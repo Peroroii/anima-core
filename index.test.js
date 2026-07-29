@@ -1,4 +1,6 @@
 const { Engine, ARCHETYPES, mulberry32, hashSeed } = require('./index.js');
+const fs = require('fs');
+const path = require('path');
 
 describe('RNG determinism', () => {
   test('same seed → identical sequence', () => {
@@ -109,5 +111,26 @@ describe('discurso × arquetipo — wired at the top-level package export (v0.4.
       expect(anima.ROTACION).toContain(d);
       expect(typeof anima.congruencia(arquetipo, d)).toBe('number');
     }
+  });
+});
+
+describe('version consistency (P3 of the architecture roadmap) — same guard pattern already ' +
+         'proven in anima-eval v0.17.0 and anima-trace v1.0.1, ported here before this package ' +
+         'accumulates the same silent drift', () => {
+  test('VERSION is read from package.json, not a hardcoded literal that can drift -- every ' +
+       'release this session kept them in sync by hand with sed, which is exactly the fragile ' +
+       'process this guard exists to make unnecessary', () => {
+    const pkg = require('./package.json');
+    const anima = require('./index');
+    expect(anima.VERSION).toBe(pkg.version);
+  });
+
+  test('CHANGELOG.md\'s newest entry states the current package version -- same discipline as ' +
+       'the fix above, applied to prose documentation instead of code, so the changelog cannot ' +
+       'silently claim to be current when it is not', () => {
+    const pkg = require('./package.json');
+    const changelog = fs.readFileSync(path.join(__dirname, 'CHANGELOG.md'), 'utf8');
+    const firstEntry = changelog.split(/^## /m)[1]; // primera entrada real, después del título "# Changelog"
+    expect(firstEntry).toMatch(new RegExp(`core — ${pkg.version.replace(/\./g, '\\.')} `));
   });
 });

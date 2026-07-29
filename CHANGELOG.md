@@ -1,5 +1,25 @@
 # Changelog
 
+## core — 0.6.1 (2026-07-29)
+
+Fixed: `VERSION` in `index.js` was a hardcoded literal, manually kept in
+sync with `package.json` via `sed` at every release this session --
+fragile, and the third instance of the exact same root cause already
+found and fixed in sibling packages (`anima-eval`'s `anima_eval_version`
+drifted six releases before anyone checked it, v0.17.0; `anima-trace`'s
+`ENGINE_VERSION` was hardcoded so badly its own mismatch check could
+never fire, v1.0.1). Now reads `version` from `package.json` at import
+time, same proven pattern.
+
+Added: two guard tests, same discipline already applied to the sibling
+packages. `VERSION` vs `package.json` (now structurally impossible to
+drift, since it's read from the same source). `CHANGELOG.md`'s newest
+entry vs `package.json` (still a real risk -- confirmed by deliberately
+desyncing `package.json` and watching this test catch it before
+restoring).
+
+77/77 tests passing (2 new).
+
 ## core — 0.6.0 (2026-07-29)
 
 Added: `src/phase_sweep.js` — a systematic signal-space sweep tool
